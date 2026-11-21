@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+    "$basetexture" "models/gentoi/walterfiles/witheredbon/LegsCDiff"
+    "$bumpmap"     "models/gentoi/walterfiles/witheredbon/LegsCNormals"
+}

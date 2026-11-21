@@ -3,7 +3,21 @@
   "name": "withered-bon",
   "title": "[PILL PACK] Withered Bon",
   "author": "Nick Vogel",
-  "status": "pending_download",
+  "status": "extracted_verified",
+  "acquisition": "original_local_backup",
   "steamcmd_download_completed": false,
-  "reason": "SteamCMD bootstrap failed: execution sandbox network disabled; no original GMA installed."
+  "source_workshop_url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3780475144",
+  "source_archive_sha256": "2cc651fed9aa9b42064329497e232bffab45aafe0817007fd7019240ad398a9e",
+  "gma_header": {
+    "title": "[PILL PACK] Withered Bon",
+    "description": "{\"title\":\"[PILL PACK] Withered Bon\",\"type\":\"entity\",\"tags\":[\"scenic\",\"realism\",\"fun\"],\"ignore\":[\"ogg\"]}",
+    "author": "Author Name",
+    "steam_id": "0",
+    "timestamp": 1786986114
+  },
+  "files": 103,
+  "payload_bytes": 218021110,
+  "roundtrip_verified": true,
+  "official_gmad_verified": true,
+  "packaging_exclusions": []
 }

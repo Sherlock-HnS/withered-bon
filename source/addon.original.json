@@ -1,0 +1,12 @@
+{
+  "title": "[PILL PACK] Withered Bon",
+  "type": "entity",
+  "tags": [
+    "scenic",
+    "realism",
+    "fun"
+  ],
+  "ignore": [
+    "ogg"
+  ]
+}

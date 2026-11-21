@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+    "$basetexture" "models/gentoi/walterfiles/witheredbon/heart_d"
+    "$bumpmap"     "models/gentoi/walterfiles/witheredbon/heart_n"
+
+}

@@ -1,0 +1,620 @@
+[
+  {
+    "path": "lua/autorun/bon_ds_start_withered.lua",
+    "size": 24199,
+    "crc": 1671659649,
+    "sha256": "a35c3f0c1520303022e33d9b15543389163df7363334475c804c4df38135e8ac"
+  },
+  {
+    "path": "lua/autorun/include/pill_thetuckingbon_withered.lua",
+    "size": 78749,
+    "crc": 1014361426,
+    "sha256": "5bdb6e9a673d2b7bf52327d7ffc43d3b7c27327acc6b5ef310c481fca26ed981"
+  },
+  {
+    "path": "materials/gentoi/witheredbon/jee.vmt",
+    "size": 304,
+    "crc": 800104935,
+    "sha256": "aad64d74060ba183955dda544ffdb8fb8f07b5d864072351ef047e6368fe51f9"
+  },
+  {
+    "path": "materials/gentoi/witheredbon/full_body_bon_infobox.png",
+    "size": 22580,
+    "crc": 3277480547,
+    "sha256": "ed6665a9375fd03d75a5de29b682c12139a4b5b4974e9081e614843c388c5fac"
+  },
+  {
+    "path": "materials/gentoi/witheredbon/black_circle.png",
+    "size": 18934,
+    "crc": 195512712,
+    "sha256": "7f007f7bfe450195f1561f7c95f4f30580eee6110e0582b579e1017cbaacb3dc"
+  },
+  {
+    "path": "materials/gentoi/witheredbon/bon_char2.png",
+    "size": 191483,
+    "crc": 3240309941,
+    "sha256": "51eb7c86a15b3443fd4f38a780a38c2caf7c8636d39817ac3c9b24a360bf465d"
+  },
+  {
+    "path": "materials/gentoi/witheredbon/bon_char1.png",
+    "size": 198214,
+    "crc": 4186882026,
+    "sha256": "7b79482d20bd185b91463a972e14c2f8fc24fb953b150e04ca962dff5a4f7ce8"
+  },
+  {
+    "path": "materials/gentoi/witheredbon/witheredbonabilityiconui.png",
+    "size": 71482,
+    "crc": 1334761998,
+    "sha256": "a038160dfd988fa587ffdcea8650d81c7dad786cb223721dbfadf1ca2836d80b"
+  },
+  {
+    "path": "materials/gentoi/witheredbon/witheredbonabilitytextui.png",
+    "size": 102231,
+    "crc": 3879516204,
+    "sha256": "a91f1f53c312fd7fa69d709eeacdfc36d01465503f896ee5ed359f81aa1d27ad"
+  },
+  {
+    "path": "materials/gentoi/witheredbon/creature.png",
+    "size": 169560,
+    "crc": 2718227324,
+    "sha256": "3f43f1ddf4856810bbb9e189ed70eb74b9b7b25bf6dedb17344f8c0554c08b55"
+  },
+  {
+    "path": "materials/gentoi/witheredbon/trueformicon2.png",
+    "size": 217554,
+    "crc": 2139463672,
+    "sha256": "21ab62acf3f57b022f373f9efab47106a5689066869a6d99a562364e56b37483"
+  },
+  {
+    "path": "materials/gentoi/witheredbon/trueformicon1.png",
+    "size": 450841,
+    "crc": 2484879880,
+    "sha256": "16d37bb111a7f7173400dcd4498c074de8b1dc47a2469b394e929258c47266bd"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/armscasing.vmt",
+    "size": 165,
+    "crc": 406158640,
+    "sha256": "4c35c0bd6cf1ad5ea7bd6d15a4ea6ec98c19da9c944078475688a1d60b0901e1"
+  },
+  {
+    "path": "materials/gentoi/witheredbon/witheredbontextui.png",
+    "size": 40627,
+    "crc": 3835338595,
+    "sha256": "916640b42106a4879abd1a891b13268fed87ab1f61f890203f7c37b3eb86db3f"
+  },
+  {
+    "path": "materials/gentoi/witheredbon/witheredbonbg.png",
+    "size": 809778,
+    "crc": 1477161636,
+    "sha256": "d93733a4ed86304de26d070731ba0fa2d6e657302d551a257e600785c397b719"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/boltendo.vmt",
+    "size": 594,
+    "crc": 2755777674,
+    "sha256": "87038b46cd04dbd54890c0f0bdd31120a69bb0afd872351a0f622e5ed54ba45a"
+  },
+  {
+    "path": "materials/gentoi/witheredbon/witheredboniconui.png",
+    "size": 1358530,
+    "crc": 3183104819,
+    "sha256": "0895eb34059979c91ae7253cb979fd98a6f3c538c9ee84f46c6d53893761b036"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/cyberfun.vmt",
+    "size": 596,
+    "crc": 3599345660,
+    "sha256": "306bc3b3dab98c22bfe245fc890bc596c2b11a2efe4ba707c833a209a01705f0"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/boltendo_d.vtf",
+    "size": 1398352,
+    "crc": 1130361049,
+    "sha256": "47d306cd1c87c73698e911cdc269ed75636e7db5c060aac2f95b09d3c9b932c8"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/boltendo_n.vtf",
+    "size": 1398352,
+    "crc": 3216993189,
+    "sha256": "1a1524ac0c30101a213cf18737b901c76651e7be7b3b204250b3efdadd86d35b"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/boltendo_r.vtf",
+    "size": 1398352,
+    "crc": 575337720,
+    "sha256": "ceaae4b861096e573f8964fc2da724ff71e9f691e397bbe71d17193357389f27"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/endobake.vmt",
+    "size": 594,
+    "crc": 3044374210,
+    "sha256": "21262c446059c8821fe1af275eb1791b841828650ad12a9c86beccff881d6657"
+  },
+  {
+    "path": "materials/gentoi/witheredbon/jee.vtf",
+    "size": 3845744,
+    "crc": 2762106993,
+    "sha256": "850f8b33ed92671b5358c1de43ea8408eb8fbe373875f9f0fe3af02a11d737be"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/armcasing_r.vtf",
+    "size": 5592656,
+    "crc": 235492941,
+    "sha256": "2d4cf6f4121d1fa681bc8888b57f58164c6f07068222dd9cff8647cf8b7e73d1"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/armcasing_d.vtf",
+    "size": 5592656,
+    "crc": 2551579789,
+    "sha256": "e4376cfa025e95e13da040ac06ea57203f18d7f18133ddef8021815a25f5b137"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/armcasing_n.vtf",
+    "size": 5592656,
+    "crc": 383645778,
+    "sha256": "99cb82de37ab5db2e5cc28f0d76f6f2c7ce240a9281498a5138359c201a6803e"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/endocustom.vmt",
+    "size": 600,
+    "crc": 2613594351,
+    "sha256": "14369445498943202fe145bf047b7340ef325b31210e4ea83250cb665c28c400"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/endocustom_d.vtf",
+    "size": 1398352,
+    "crc": 3211184275,
+    "sha256": "f5e8158201a598d731fc27e774d4efe8f1a9526080ffaf59e74e0502b189685a"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/armcnormals.vtf",
+    "size": 5592656,
+    "crc": 3168240819,
+    "sha256": "155b66252920875a28841654dc4cf028d588ca7b4cba09cddda60436b112c0ff"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/endodark.vmt",
+    "size": 594,
+    "crc": 3407203873,
+    "sha256": "dabc25edd1254f2534d20ba0d7544605bfac431578008f9d483b572ea11c60e1"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/endocustom_n.vtf",
+    "size": 1398352,
+    "crc": 976351777,
+    "sha256": "7440dc9d93cefc498e1379343ff23aefaf3a64cb3ff6531423ac9beb2d8a9d0d"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/endocustom_r.vtf",
+    "size": 1398352,
+    "crc": 2336852800,
+    "sha256": "4e33faf2d7f8c931c079496d0efd91ce4a4e3e28fad3c935bd4050c057295a26"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/endobake_r.vtf",
+    "size": 5592656,
+    "crc": 460062531,
+    "sha256": "8f7c3234c32eca44e1f89cf166aa1770c5b9f83ec1aa904050f84d48647a5581"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/endolight.vmt",
+    "size": 596,
+    "crc": 4174176165,
+    "sha256": "dea24044081abba922ccc4911e9331ebe39bebde887a691395784629b00c646d"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/cyberfun_d.vtf",
+    "size": 5592656,
+    "crc": 2146069085,
+    "sha256": "90eec4a607654b0c8eeef23a31f3dcf6852c6e5b53affe13e9f1f75323645770"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/armcdiff.vtf",
+    "size": 5592656,
+    "crc": 1636013877,
+    "sha256": "3d290b3a1b8d0dcca3f1d51d52f2253005583ce38ec7623c65aaeb402972dd3e"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/eye.vmt",
+    "size": 504,
+    "crc": 6785443,
+    "sha256": "8163bf868f1ea5700322304deda94799ce0ff657f5c41b0515d1e4cd36c01376"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/endodark_d.vtf",
+    "size": 1398352,
+    "crc": 3002010167,
+    "sha256": "7f03cbf9b66e454b8638f39bf3929c2ee5f9049dd05663c32158454707844e4d"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/endodark_r.vtf",
+    "size": 1398352,
+    "crc": 2435273274,
+    "sha256": "698c0bc900f5a3e56da582253257f45538ecde7ceed6c3c8c91f1c62d8dfb8f9"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/endodark_n.vtf",
+    "size": 1398352,
+    "crc": 1121322314,
+    "sha256": "f6d7b5d55a66050601505a49ed0743b50bf9571f7d48a8feed02b14cf41037f5"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/endolight_d.vtf",
+    "size": 1398352,
+    "crc": 1236254317,
+    "sha256": "0fbad445c6f71f91eb50387dd50f743519ce766ae8ea2b08d4fe4569afb29785"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/headcasing.vmt",
+    "size": 167,
+    "crc": 2822886252,
+    "sha256": "77bd5cb75c47a35e180a27aaff38378e21af4b1f12a2fc502487dfcf02276edb"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/heart tex.vmt",
+    "size": 162,
+    "crc": 2996672367,
+    "sha256": "4061e99d83fa03b8315bea7bd19b4a6c81d8e011c8add03b88c3d9c0515e6f7d"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/endolight_n.vtf",
+    "size": 1398352,
+    "crc": 2580960267,
+    "sha256": "e22126379ed5b3cf88d5a24b8b13cd8c038d1e5c90389ccedc8af5ccba911d47"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/eye_d.vtf",
+    "size": 1398352,
+    "crc": 3387734787,
+    "sha256": "63f008e2ab92f6167d40a68e4c97a435ad65551c227e085c7df6bd8d93c9c27a"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/legscasing.vmt",
+    "size": 167,
+    "crc": 964629069,
+    "sha256": "23b615c7e3b06062e5f0e466c5ba3556abb008d07b66e07c0b55080dea47ad89"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/cyberfun_n.vtf",
+    "size": 5592656,
+    "crc": 610597258,
+    "sha256": "08b5497cb658ff2309f44c12019b6b9899c6082977dcc533f7a51f3f3d0cbe36"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/heart_d.vtf",
+    "size": 2796440,
+    "crc": 825989617,
+    "sha256": "008fe73ae6f2d8956f685cded823457861c7ba5d56a119467714b607a1ffcadd"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/cyberfun_r.vtf",
+    "size": 5592656,
+    "crc": 2310703563,
+    "sha256": "404f52aa33cd6bbdb9ece4bd796a8e50d9a855dba91452ddfef1c7011465c313"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/heart_n.vtf",
+    "size": 2796440,
+    "crc": 2045262549,
+    "sha256": "604ba9f890a514f285569272cd110d2469c1c7428d8b847e27c587332e1668f6"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/endobake_n.vtf",
+    "size": 5592656,
+    "crc": 2310703563,
+    "sha256": "404f52aa33cd6bbdb9ece4bd796a8e50d9a855dba91452ddfef1c7011465c313"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/limbendo.vmt",
+    "size": 595,
+    "crc": 550934168,
+    "sha256": "34e8874172355e0f5537ac5b65e60e729e42f97aaf011953feeff1c5e2d941a3"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/limbendo_d.vtf",
+    "size": 1398352,
+    "crc": 866560511,
+    "sha256": "4e741ecf18a0fad33b38d4df650fbd4695cea8bbd4cd64d1221979275b73732e"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/headcdiff.vtf",
+    "size": 5592656,
+    "crc": 1699525357,
+    "sha256": "f684bd3611197ee9fb6121ba269db55da589c3b4cbde27a7970aa46feb245a32"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/endobake_d.vtf",
+    "size": 5592656,
+    "crc": 138654324,
+    "sha256": "4472a2d4d04086ac60e550a8955cdd966e183e9de37c150078168701addb51c4"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/legscasing_d.vtf",
+    "size": 5592656,
+    "crc": 2669999325,
+    "sha256": "c97968ae1be4355c0e66199fefdcd93d30ebc2d8c28ca98e659e8fbad1170e6e"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/misc.vmt",
+    "size": 166,
+    "crc": 1229625977,
+    "sha256": "49c60b52f757e6cff1145d887f9a6a88a150dbc2061bb5175f8d57b9ee4aeb78"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/limbendo_n.vtf",
+    "size": 1398352,
+    "crc": 2719327937,
+    "sha256": "04ec22d595cdb89600afbf2fda525f3a77806d0ed346104071b8348151a1dca7"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/limbendo_r.vtf",
+    "size": 1398352,
+    "crc": 27945450,
+    "sha256": "26d2c8f05cb5a5120598de55b249ef035da5cec5892d46755d47549508ec8922"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/eye_n.vtf",
+    "size": 5592656,
+    "crc": 699102394,
+    "sha256": "688bf948515afdaca38f04f3ad9391d4ed48d8754c616130063e0c6d6be847b2"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/legscasing_r.vtf",
+    "size": 5592656,
+    "crc": 2256460080,
+    "sha256": "02a375a2d0ac3c9d200335b7b894775b7fd098ba861778a22d5403c6d7379625"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/legscnormals.vtf",
+    "size": 5592656,
+    "crc": 3618979713,
+    "sha256": "5a8817b3ab43cd62f464fee1797d9738dfb26faa0027e6e9dfaf240200799376"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/headcnormals.vtf",
+    "size": 5592656,
+    "crc": 213135605,
+    "sha256": "d0351e7db7a10bcd7c664f10693f1e0db49bc339a614e11f999c25059f7f2c52"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/torsocasing.vmt",
+    "size": 169,
+    "crc": 2538877107,
+    "sha256": "fde84e40bdc58969a65562fb19ab7470853ecc39c299bf332c39fe3bc89e8dfc"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/torsoheadcasing.vmt",
+    "size": 593,
+    "crc": 1774133659,
+    "sha256": "25e3da791c5042ec51cf544630e25eb642fecc7c1684e5d9cc2fe3b700aee0fa"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/miscnormw.vtf",
+    "size": 5592656,
+    "crc": 3851806350,
+    "sha256": "4849389d8c2b0c460f1caeb81e6c7c9ecf229fdacf35f0f533724087678c8055"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/legscasing_n.vtf",
+    "size": 5592656,
+    "crc": 3144797691,
+    "sha256": "13d21d792b6d9b1ee24295e9c6779d0db90476dfa57330ae35591df10adcc4b2"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/misc_n.vtf",
+    "size": 5592656,
+    "crc": 2310703563,
+    "sha256": "404f52aa33cd6bbdb9ece4bd796a8e50d9a855dba91452ddfef1c7011465c313"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/misc_d.vtf",
+    "size": 5592656,
+    "crc": 1136741751,
+    "sha256": "55cfeb14d35bbb4d2dbfd8a2585ade7533b287653fa449748e3bb71b45bcf248"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/legscdiff.vtf",
+    "size": 5592656,
+    "crc": 3055321825,
+    "sha256": "63d61f4f11d6ea9eaa68238b11d4fb978e219bb33c97d620bcc22d308262e010"
+  },
+  {
+    "path": "models/gentoi/walterfiles/bon/killanim.dx90.vtx",
+    "size": 205,
+    "crc": 1361295746,
+    "sha256": "ce33fa798df8dea9241bac9574fd99e10e9c1fa97b5e749a84559deef4f84531"
+  },
+  {
+    "path": "models/gentoi/walterfiles/bon/killanim.mdl",
+    "size": 58376,
+    "crc": 662194687,
+    "sha256": "0f9614f495b43cdf094b59236bf19ca0d25cd8588bc8ea3ff531f7ee12adbf94"
+  },
+  {
+    "path": "models/gentoi/walterfiles/bon/killanim.vvd",
+    "size": 320,
+    "crc": 3764233106,
+    "sha256": "3d18d33847382414b410dd2ba5a807d4d8af6d4efb00adaa8f102fafba7c6127"
+  },
+  {
+    "path": "materials/pills/witheredbonworkshopicon.png",
+    "size": 1359887,
+    "crc": 1399946320,
+    "sha256": "8edf85aa9adb8f486873eaaa427e507e40107051d889017ee2234660fa22e4e2"
+  },
+  {
+    "path": "models/gentoi/walterfiles/witheredbon.dx90.vtx",
+    "size": 1007949,
+    "crc": 207340035,
+    "sha256": "e2522f51e1912dc7759f7b9d08a992b449d6a602fa412f1b5f3bb82e2d40cbc5"
+  },
+  {
+    "path": "models/gentoi/walterfiles/witheredbon.dx80.vtx",
+    "size": 1008406,
+    "crc": 1217358164,
+    "sha256": "3d206635ce3da5136e4bd7a7fdd79d62df042eeeb0ed6536dcbb654acd222fe9"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/torsocnormals.vtf",
+    "size": 5592656,
+    "crc": 2747933282,
+    "sha256": "16f9d7b419c4cd4596053e70997532021b22183a8de930fbf6f7176c9848b3c9"
+  },
+  {
+    "path": "models/gentoi/walterfiles/witheredbon.phy",
+    "size": 556069,
+    "crc": 19436278,
+    "sha256": "be9a07870125ec2764b4acc342cf9833b922d5d1a830991ab4c0fd503d143710"
+  },
+  {
+    "path": "materials/pills/pill_bon_ds_withered.png",
+    "size": 1448027,
+    "crc": 3815125692,
+    "sha256": "18e4be9f606aeae913fee95fd211e04cb27f6d6c3f6fe447dc9d464d52fe71bc"
+  },
+  {
+    "path": "sound/gentoi/witheredbon/bon run step 1.mp3",
+    "size": 47482,
+    "crc": 4038996994,
+    "sha256": "6b837bf333c88b56674e2aa76e16a4620bb87c48bbd8a5e2f49452407b423667"
+  },
+  {
+    "path": "sound/gentoi/witheredbon/bon run step 3.mp3",
+    "size": 50617,
+    "crc": 1755419225,
+    "sha256": "bd282826000f9bf15ad0f46fd818b35fedcf6cda1415a4c36b107b5aebd3f729"
+  },
+  {
+    "path": "sound/gentoi/witheredbon/bon run step 2.mp3",
+    "size": 50617,
+    "crc": 3327650291,
+    "sha256": "4aab217261a8e0f858febfa679c791288f2d49347d2dbadcd09028784cb86183"
+  },
+  {
+    "path": "models/gentoi/walterfiles/witheredbon.mdl",
+    "size": 715272,
+    "crc": 2532544034,
+    "sha256": "daea7a5627a3be330525bd2e516190ff3324b7fe56807c42c2cb0541609b9fdb"
+  },
+  {
+    "path": "sound/gentoi/witheredbon/bon walk step 1.mp3",
+    "size": 33063,
+    "crc": 1167796080,
+    "sha256": "7342d85b96ac225362e7fe836424df3f29e71730947a0e491010e89be89d7a03"
+  },
+  {
+    "path": "sound/gentoi/witheredbon/bon walk step 2.mp3",
+    "size": 38705,
+    "crc": 13158385,
+    "sha256": "082578a31be2f01ddcb6821d261065cebb8aec2dda7349594bb5297cca539a47"
+  },
+  {
+    "path": "sound/gentoi/witheredbon/bon walk step 3.mp3",
+    "size": 36197,
+    "crc": 1335678508,
+    "sha256": "70101505a4a7abcc5a02f0b91c79973d4efc2d5a748fa0e2f1c1abf2f914186e"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/torsocdiff.vtf",
+    "size": 5592656,
+    "crc": 2490787318,
+    "sha256": "47ae9f4c79679d659d823bf5a64419368ea30b5345f6a214f73045b9ef19b740"
+  },
+  {
+    "path": "sound/gentoi/witheredbon/helphudexit.wav",
+    "size": 164468,
+    "crc": 200121417,
+    "sha256": "7d63c4e2d859e2301e409f3c979ae84f2cf64305fb41f463d86c4c884ef56f79"
+  },
+  {
+    "path": "sound/gentoi/witheredbon/bonjumpdca2.wav",
+    "size": 737358,
+    "crc": 1000711658,
+    "sha256": "1899a3beca2b77b0907215ba595d60dc32ff4e2376e0cb4770ec0ef3af8e3a0d"
+  },
+  {
+    "path": "sound/gentoi/witheredbon/helphudopen.wav",
+    "size": 253660,
+    "crc": 2335702413,
+    "sha256": "aa361c26408f1cc131b6f0d8d8253a01b1cb348dbbe403049fffbfad1e10978f"
+  },
+  {
+    "path": "sound/gentoi/witheredbon/pingsound.wav",
+    "size": 401486,
+    "crc": 1114875464,
+    "sha256": "ba8ae2649aa3454412fd3e1bf2e0b7f640e8b6882f531b89f3651e639b965a53"
+  },
+  {
+    "path": "sound/gentoi/witheredbon/bonlaughnew.wav",
+    "size": 1654862,
+    "crc": 2781400371,
+    "sha256": "7e5aee5a3356bb3190583cc016c795cf303fcdcfad29c9ddccda0969ffe3b9fe"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/miscdiffw.vtf",
+    "size": 5592656,
+    "crc": 2393192477,
+    "sha256": "9453fa4a22cc058f04d530a21fce562467b3e241a5bc0c5610ea92d4ba917a46"
+  },
+  {
+    "path": "sound/gentoi/witheredbon/witheredbonvoiceline2.wav",
+    "size": 1040660,
+    "crc": 2851880410,
+    "sha256": "7bed8a25ea5a2df8d12a02066ef556f4518470ceb45c74a566391998d21db9e1"
+  },
+  {
+    "path": "sound/gentoi/witheredbon/witheredbonvoiceline3.wav",
+    "size": 895900,
+    "crc": 1365288986,
+    "sha256": "ca191ad486439d154b48a68a6792d3dcbc04d237ae2813120d37c15d340a6a45"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/torsoheadcasing_r.vtf",
+    "size": 5592656,
+    "crc": 1544165556,
+    "sha256": "6d0323083c0c9cebdd72f78768c90aefc6b60a0b4a10857f972bd35754368863"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/torsoheadcasing_n.vtf",
+    "size": 5592656,
+    "crc": 342562458,
+    "sha256": "09152ef1837739c77f55956a8d40f1c00986879119ae0476658892d383846840"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/misc_r.vtf",
+    "size": 5592656,
+    "crc": 1392454985,
+    "sha256": "09a74c0c282f3a81a3d60be3fabf572d06f81684b07afd5e4daa6dc8c10b4de1"
+  },
+  {
+    "path": "sound/gentoi/witheredbon/witheredbonvoiceline4.wav",
+    "size": 1005048,
+    "crc": 314014410,
+    "sha256": "948ddcb94f8dc037785411ad08640e77a4c7a919094843b093758818c2c31dc0"
+  },
+  {
+    "path": "sound/gentoi/witheredbon/witheredbonkillsfx.wav",
+    "size": 3337348,
+    "crc": 3896963915,
+    "sha256": "06f71801406791ecaf7ab9265e7ed3a37063febb0a9d1671c60bb2a396bd08e4"
+  },
+  {
+    "path": "sound/gentoi/witheredbon/witheredbonvoiceline1.wav",
+    "size": 2006472,
+    "crc": 3293035615,
+    "sha256": "20dcb34bcfed248d6fd8467a50f2e16b4254af26ee53ca5078f03ccef4d2562d"
+  },
+  {
+    "path": "models/gentoi/walterfiles/witheredbon.vvd",
+    "size": 3750400,
+    "crc": 342171683,
+    "sha256": "dd43380f3657decc531c9d9647bd29684aedde174e6bda25e92dbcbac811646c"
+  },
+  {
+    "path": "materials/models/gentoi/walterfiles/witheredbon/torsoheadcasing_d.vtf",
+    "size": 5592656,
+    "crc": 2330250874,
+    "sha256": "0787edfc49e8e4d1b99c05fdf28fb9fda8fe40e5f326a8bccdf4caf9c42521a3"
+  }
+]

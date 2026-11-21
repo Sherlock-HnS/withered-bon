@@ -1,0 +1,10 @@
+{
+  "source_files": 103,
+  "packed_files": 103,
+  "excluded_files": [],
+  "package_tags": [
+    "scenic",
+    "realism"
+  ],
+  "verified_with": "gmad create + SHA-256 por arquivo"
+}
