@@ -1,0 +1,9 @@
+{
+  "id": "3780475144",
+  "name": "withered-bon",
+  "title": "[PILL PACK] Withered Bon",
+  "author": "Nick Vogel",
+  "status": "pending_download",
+  "steamcmd_download_completed": false,
+  "reason": "SteamCMD bootstrap failed: execution sandbox network disabled; no original GMA installed."
+}
