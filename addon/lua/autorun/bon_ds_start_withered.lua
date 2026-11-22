@@ -100,12 +100,8 @@ if CLIENT then
 		local curtime = CurTime()
 
         local screenW, screenH = ScrW(), ScrH()
-        local iconize = ScreenScale(60)
-        local biggericoon = ScreenScale(100)
 
-        local rx, ry = screenW/2 + screenW/6, screenH - ScreenScale(40)
 
-        local yaxis = screenH - biggericoon/2
 
         pillentity.HoldingDownMenu_bon_lerp = pillentity.HoldingDownMenu_bon_lerp or 0
         pillentity.HoldingDownMenu_bon_lerp_bg = pillentity.HoldingDownMenu_bon_lerp_bg or 0
@@ -191,8 +187,6 @@ if CLIENT then
             TEXT_ALIGN_CENTER
         )
 
-        ry = Lerp(pillentity.HoldingDownMenu_bon_lerp, ry, screenH + biggericoon/1.5)
-        yaxis = Lerp(pillentity.HoldingDownMenu_bon_lerp, yaxis, screenH + biggericoon/1.5)
 
         local currentaadd = Lerp(pillentity.HoldingDownMenu_bon_lerp, 0, screenW*0.1)
 
@@ -227,58 +221,6 @@ if CLIENT then
         surface.SetDrawColor(255,255,255,math.Round(255 * pillentity.HoldingDownMenu_bon_lerp_ability))
         surface.SetMaterial(preservedmats["WITHEREDBONABILITYICONUI"])
         surface.DrawTexturedRect(-screenW*0.025+currentaadd,0,screenW,screenH)
-
-        --
-
-        surface.SetDrawColor(255,255,255,255)
-        if pillentity:GetNWBool("FakePuppet_witheredbon_gentoi") then
-            surface.SetMaterial(preservedmats["TRUEFORMICON2"])
-        else
-            surface.SetMaterial(preservedmats["TRUEFORMICON1"])
-        end
-        
-        surface.DrawTexturedRectRotated(0 + biggericoon/2, yaxis,biggericoon,biggericoon,0)
-
-        if pillentity:GetNW2Bool("GentoiPills_bon_canuse_trueform") then
-            surface.SetDrawColor(255,255,255,255)
-        else
-            surface.SetDrawColor(255,0,0,255)
-        end
-        if pillentity:GetNWBool("FakePuppet_witheredbon_gentoi") then
-            surface.SetMaterial(preservedmats["bon_char2"])
-        else
-            surface.SetMaterial(preservedmats["bon_char1"])
-        end
-        
-        surface.DrawTexturedRectRotated(0 + biggericoon/2 + iconize * 1.5, ry, iconize, iconize, 0)
-
-        if pillentity:GetNW2Float("Bon_abilitycd") > curtime then
-            local frac = math.Clamp((pillentity:GetNW2Float("Bon_abilitycd") - curtime) / (pillentity:GetNW2Float("Bon_abilitycd_dur")),
-                0, 1
-            )
-			
-			local cx = 0 + biggericoon/2 + iconize * 1.5
-			local cy = ry
-
-			local left = cx - iconize / 2
-			local top = cy - iconize / 2
-
-			render.SetScissorRect(
-				left,
-				top + iconize * (1 - frac),
-				left + iconize,
-				top + iconize,
-				true
-			)
-			
-			surface.SetDrawColor(255,255,255,253)
-            surface.SetMaterial(preservedmats["black_circle"])
-			surface.DrawTexturedRectRotated(cx-1, cy-1, iconize+4, iconize+4, 0)
-			
-			render.SetScissorRect(0, 0, 0, 0, false)
-        end
-
-        draw.SimpleTextOutlined("1","CreditsText_Large_bon",0 + biggericoon/2 + iconize * 1,ry -iconize /2+ ScreenScale(2),color_white,TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER,6,color_black)
         
     end)
 
@@ -314,13 +256,8 @@ if SERVER then
     local function CreateAConvVarConstant(VarName, DefaultSetting, Text,min,max)
         CreateConVar(VarName, DefaultSetting, FCVAR_ARCHIVE, Text, min, max)     
     end
-    --bon_gentoi_stats
     CreateAConvVarConstant("GentoiPills_bon_hasintroanim",1,"", 0,1) 
 
-    CreateAConvVarConstant("GentoiPills_bon_walkspeed",64,"", 0,1e9)  
-    CreateAConvVarConstant("GentoiPills_bon_runspeed",420,"", 0,1e9)  
-    CreateAConvVarConstant("GentoiPills_bon_crouchspeed",64,"", 0,1e9)  
-    CreateAConvVarConstant("GentoiPills_bon_jumppower",0,"", 0,1e9)  
 
     --Bon_abilitycd
     CreateAConvVarConstant("GentoiPills_bon_canuse_trueform",1,"", 0,1) 
@@ -330,9 +267,6 @@ if SERVER then
     CreateAConvVarConstant("GentoiPills_bon_canuse_trueform_nosoundduration",20,"", 0,1e9) 
     CreateAConvVarConstant("GentoiPills_bon_canuse_trueform_outlineduration",20,"", 0,1e9) 
 
-    CreateAConvVarConstant("GentoiPills_bon_trueform_walkadd",400,"", 0,1e9) 
-    CreateAConvVarConstant("GentoiPills_bon_trueform_runadd",400,"", 0,1e9) 
-    CreateAConvVarConstant("GentoiPills_bon_trueform_crouchadd",400,"", 0,1e9) 
 
     CreateAConvVarConstant("GentoiPills_bon_canuse_trueform_oldbody_detectionrange",500,"", 0,1e9) 
 else
@@ -351,10 +285,6 @@ else
                 listofdefualtconvars = {
                     "GentoiPills_bon_hasintroanim",
 
-                    "GentoiPills_bon_walkspeed",
-                    "GentoiPills_bon_runspeed",
-                    "GentoiPills_bon_crouchspeed",
-                    "GentoiPills_bon_jumppower",
 
                     "GentoiPills_bon_canuse_trueform",
                     "GentoiPills_bon_canuse_trueform_cd_hit",
@@ -363,9 +293,6 @@ else
                     "GentoiPills_bon_canuse_trueform_nosoundduration",
                     "GentoiPills_bon_canuse_trueform_outlineduration",
 
-                    "GentoiPills_bon_trueform_walkadd",
-                    "GentoiPills_bon_trueform_runadd",
-                    "GentoiPills_bon_trueform_crouchadd",
 
                     "GentoiPills_bon_canuse_trueform_oldbody_detectionrange"
                 }
@@ -585,18 +512,6 @@ else
             panel:CheckBox("Intro Anim","GentoiPills_bon_hasintroanim")
             panel:Help("")
 
-            panel:Help("-- Speed --")
-            panel:NumSlider("Walk Speed","GentoiPills_bon_walkspeed",1,200)
-            panel:NumSlider("Run Speed","GentoiPills_bon_runspeed",200,500)
-            panel:NumSlider("Crouch Speed","GentoiPills_bon_crouchspeed",1,200)
-            panel:NumSlider("Jump Power","GentoiPills_bon_jumppower",0,200)
-            panel:Help("")
-
-            panel:Help("-- True Form Speed --")
-            panel:NumSlider("Add Walk Speed","GentoiPills_bon_trueform_walkadd",200,500)
-            panel:NumSlider("Add Run Speed","GentoiPills_bon_trueform_runadd",200,500)
-            panel:NumSlider("Add Crouch Speed","GentoiPills_bon_trueform_crouchadd",200,500)
-            panel:Help("")
 
             panel:Help("-- True Form --")
             panel:CheckBox("Can Be Used","GentoiPills_bon_canuse_trueform")

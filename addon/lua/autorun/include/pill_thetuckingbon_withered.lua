@@ -876,79 +876,361 @@ local function AdvancedPillSound(SoundData, ent)
     return true
 end
 
-local function bonjackietien_jumpscare(ply, ent, duration, customanimstuff)
-    if not ent.IsInJumpscare then ent.IsInJumpscare = 0 end
-    if ent.IsInJumpscare >= CurTime() then return end
+local function BonCvar(name, default)
+    local cv = GetConVar(name)
+    if cv then return cv:GetFloat() end
 
-    local jumpscare_entity = nil
+    return default
+end
 
-    for _, ent2 in pairs(ents.FindInSphere(ent:LocalToWorld(Vector(0, 0, 50)), 70)) do
-        if (ent2:IsPlayer() or ent2:IsNextBot() or ent2:IsNPC()) and ent2:Health() >= 0.1 then
-            if ent2 == ply then continue end
-            if ent2:IsPlayer() and ent2:Team() == TEAM_SPECTATOR then continue end
+local jumpscareVoiceLines = {
+    "gentoi/witheredbon/WITHEREDBONVOICELINE1.wav",
+    "gentoi/witheredbon/WITHEREDBONVOICELINE2.wav",
+    "gentoi/witheredbon/WITHEREDBONVOICELINE3.wav",
+    "gentoi/witheredbon/WITHEREDBONVOICELINE4.wav"
+}
 
-            if IsValid(ent2) then
-                jumpscare_entity = ent2
-                break
-            end
-        end
+local tauntSounds = {
+    "dark/bon/BONsound1.mp3",
+    "dark/bon/BONsound2.mp3",
+    "gentoi/witheredbon/BonLaughNew.wav"
+}
+
+-- Players que a Kill API aceita como alvo dentro de uma esfera
+local function BonFindTargets(ply, pos, radius, ignoreNoTarget)
+    local found = {}
+
+    for _, v in ipairs(ents.FindInSphere(pos, radius)) do
+        if not v:IsPlayer() or v == ply then continue end
+        if not SherlockHNS.CanTarget(v, ply) then continue end
+        if ignoreNoTarget and bit.band(v:GetFlags(), FL_NOTARGET) ~= 0 then continue end
+        found[#found + 1] = v
     end
 
-    if jumpscare_entity ~= nil then
-        ent.jumpscare_entity = jumpscare_entity
-        jumpscare_entity:SetPos(ply:GetPos() + ent:GetPuppet():GetForward() * 75)
+    return found
+end
 
-        local targetAngle = (ply:GetPos() - jumpscare_entity:GetPos()):Angle()
+-- Visual do jumpscare (esqueleto + corpo da vitima). Retorna a funcao de limpeza
+-- que o playHNSJumpscare chama quando o kill termina ou e cancelado.
+local function BonJumpscareVisuals(ply, ent, victim)
+    local puppet = ent:GetPuppet()
 
-        targetAngle.p = 0
-        targetAngle.r = 0
+    local ang = (ply:GetPos() - victim:GetPos()):Angle()
+    ang.p = 0
+    ang.r = 0
+    victim:SetEyeAngles(ang)
 
-        jumpscare_entity:SetAngles(targetAngle)
+    local anim, fake
+    local hidden = false
+    local oldColor, oldRender
 
-        ply:SetNWInt("DisableMovement_jumpscare_pill_bon_withered", duration+CurTime())
-        jumpscare_entity:SetNWInt("DisableMovement_jumpscare_pill_bon_withered", duration+CurTime())
+    if victim:LookupBone("ValveBiped.Bip01_Pelvis") then
+        anim = ents.Create("prop_dynamic")
+        anim:SetModel("models/Gentoi/walterfiles/bon/killanim.mdl")
+        anim:SetPos(puppet:GetPos() + puppet:GetForward() * 3 + puppet:GetUp() * 5)
+        anim:SetAngles(puppet:GetAngles() + Angle(0, 180, 0))
+        anim:SetParent(puppet)
+        anim:Spawn()
+        ent:DeleteOnRemove(anim)
+        anim:ResetSequence("skeleton")
 
-        ent.IsInJumpscare = CurTime() + duration
+        fake = ents.Create("prop_dynamic")
+        fake:SetModel(victim:GetModel())
+        fake:SetParent(anim)
+        fake:AddEffects(EF_BONEMERGE)
+        fake:Fire("SetParentAttachment", "camera")
+        fake:Spawn()
+        ent:DeleteOnRemove(fake)
+        ent:SetNWEntity("JumpscareDeathThing_ent", fake)
+        fake:SetNWEntity("JumpscareDeathThing_ent_scp096", victim)
 
-        local puppet = ent:GetPuppet()
+        oldColor = victim:GetColor()
+        oldRender = victim:GetRenderMode()
+        victim:SetRenderMode(RENDERMODE_TRANSCOLOR)
+        victim:SetColor(Color(255, 255, 255, 0))
+        victim:SetNoDraw(true)
+        victim:SetActiveWeapon(NULL)
+        hidden = true
+    end
 
-        if jumpscare_entity:IsPlayer() then
-            net.Start('bon_jumpscare_gen_withered')
-            net.WriteEntity(puppet)
-            net.WriteBool(true)
-            net.Send(jumpscare_entity)
-        else
-            jumpscare_entity:NextThink(duration+0.1+CurTime())
+    return function()
+        local rag
+
+        if IsValid(anim) and IsValid(fake) then
+            anim:SetParent(NULL)
+            local a = fake:GetAngles()
+            a:RotateAroundAxis(anim:GetForward(), 90)
+            a:RotateAroundAxis(anim:GetUp(), 90)
+            local fwd = IsValid(puppet) and puppet:GetForward() or anim:GetForward()
+            rag = {
+                model = fake:GetModel(),
+                pos = anim:GetPos() + fwd * 30,
+                ang = a + Angle(0, 180, 0)
+            }
         end
 
-        timer.Simple(duration, function()
-            if !(IsValid(jumpscare_entity)) or !IsValid(ent) then return end
+        if IsValid(anim) then anim:Remove() end
+        if IsValid(fake) then fake:Remove() end
+        if IsValid(ent) then ent:SetNWEntity("JumpscareDeathThing_ent", NULL) end
 
-            if jumpscare_entity:IsPlayer() then
-                jumpscare_entity:Kill(ply)
+        if hidden and IsValid(victim) then
+            victim:SetNoDraw(false)
+            victim:SetRenderMode(oldRender)
+            victim:SetColor(oldColor)
+        end
 
-                net.Start('bon_jumpscare_gen_withered')
-                net.WriteEntity(puppet)
-                net.WriteBool(false)
-                net.Send(jumpscare_entity)
-            else
-                jumpscare_entity:TakeDamage(1e9, ply)
+        -- So comemora se a vitima realmente morreu (force field/infeccao/cancelamento nao contam)
+        timer.Simple(0.1, function()
+            if not IsValid(victim) or victim:Alive() then return end
+
+            if rag then
+                local r = ents.Create("prop_ragdoll")
+                r:SetModel(rag.model)
+                r:SetPos(rag.pos)
+                r:SetAngles(rag.ang)
+                r:Spawn()
             end
 
-            AdvancedPillSound({
-                stringe = {
-                    "gentoi/witheredbon/WITHEREDBONVOICELINE1.wav",
-                    "gentoi/witheredbon/WITHEREDBONVOICELINE2.wav",
-                    "gentoi/witheredbon/WITHEREDBONVOICELINE3.wav",
-                    "gentoi/witheredbon/WITHEREDBONVOICELINE4.wav"
-                },
-                pitchPercent = 100,
-                soundLevel = 67
-            }, ent)
+            if IsValid(ent) then
+                AdvancedPillSound({
+                    stringe = jumpscareVoiceLines,
+                    pitchPercent = 100,
+                    soundLevel = 67
+                }, ent)
+            end
         end)
-
-        customanimstuff()
     end
+end
+
+-- Kill via Kill API: playHNSJumpscare -> SherlockHNS.KillWithDelay.
+-- O gamemode cuida de travas, alvo valido, cancelamento, force field e morte.
+local function BonStartJumpscare(ply, ent)
+    if not SherlockHNS or not pk_pills.playHNSJumpscare then return false end
+
+    local puppet = ent:GetPuppet()
+    if not IsValid(puppet) then return false end
+
+    local victim, nearest
+
+    for _, v in ipairs(BonFindTargets(ply, ent:LocalToWorld(Vector(0, 0, 50)), 70, false)) do
+        local d = v:GetPos():DistToSqr(ply:GetPos())
+
+        if not nearest or d < nearest then
+            victim, nearest = v, d
+        end
+    end
+
+    if not victim then return false end
+
+    local dur = puppet:SequenceDuration(puppet:LookupSequence("kill"))
+
+    local started = pk_pills.playHNSJumpscare(ply, ent, victim, dur, {
+        camera = "bon_jumpscare_gen_withered",
+        offset = 75,
+        animation = "jumpscare",
+        sound = "jumpscares",
+        onStart = function(v)
+            return BonJumpscareVisuals(ply, ent, v)
+        end,
+    })
+
+    return started and true or false
+end
+
+-- Habilidades da pill (Abilities API). hnsAbilities em forma de funcao: as
+-- convars de admin sao lidas na hora em que a pill e concedida.
+local function BonBuildAbilities(ply, ent)
+    local list = {}
+
+    list[#list + 1] = {
+        id = "jumpscare",
+        name = "Jumpscare",
+        icon = "gentoi/witheredbon/bon_char1.png",
+        key = IN_ATTACK,
+        color = Color(255, 40, 40),
+        cooldown = 0,
+        order = 1,
+
+        CanUse = function(p, e)
+            if not IsValid(e) then return false end
+            if IsValid(e.Ragdollentity) then return false end
+            if e:GetNW2Float("jup_delyay_bon") >= CurTime() then return false end
+            if e:GetNW2Float("trueform_duration") > CurTime() then return false end
+            if p:GetNWInt("DisableMovement_jumpscare_pill_bon_withered") >= CurTime() then return false end
+        end,
+
+        -- retorna false se nao houver alvo, para nao gastar cooldown
+        OnUse = function(p, e)
+            return BonStartJumpscare(p, e)
+        end,
+    }
+
+    if BonCvar("GentoiPills_bon_canuse_trueform", 1) ~= 0 then
+        list[#list + 1] = {
+            id = "trueform",
+            name = "Forma Verdadeira",
+            icon = "gentoi/witheredbon/trueformicon1.png",
+            keyLabel = "1",
+            color = Color(255, 60, 60),
+            toggle = true,
+            duration = BonCvar("GentoiPills_bon_canuse_trueform_duration", 20),
+            cooldown = BonCvar("GentoiPills_bon_canuse_trueform_cd_failed", 15),
+            tickInterval = 0.05,
+            order = 2,
+
+            CanUse = function(p, e, ab)
+                if ab.active then return end -- desligar sempre pode
+                if not IsValid(e) or not IsValid(e:GetPuppet()) then return false end
+                if BonCvar("GentoiPills_bon_canuse_trueform", 1) == 0 then return false end
+                if IsValid(e.Ragdollentity) then return false end
+                if p:GetNWInt("DisableMovement_jumpscare_pill_bon_withered") >= CurTime() then return false end
+            end,
+
+            OnUse = function(p, e, ab)
+                local puppet = IsValid(e) and e:GetPuppet()
+                if not IsValid(puppet) then return false end
+
+                local decoy = ents.Create("prop_dynamic")
+                decoy:SetModel("models/gentoi/walterfiles/witheredbon.mdl")
+                decoy:Spawn()
+                decoy:SetPos(puppet:GetPos())
+                decoy:SetAngles(puppet:GetAngles())
+                e:DeleteOnRemove(decoy)
+
+                decoy:ResetSequence(decoy:LookupSequence("idle"))
+                decoy:SetCycle(0)
+                decoy:SetPlaybackRate(1)
+
+                ab.data.decoy = decoy
+                ab.data.decoyPos = puppet:GetPos()
+                ab.data.hit = nil
+
+                e.FakePuppet_witheredbon_gentoi = decoy
+                e:SetNWBool("FakePuppet_witheredbon_gentoi", true)
+                e:SetNW2Float("trueform_duration", CurTime() + (ab.def.duration or 0))
+            end,
+
+            -- Corpo antigo: realca inimigos perto dele; se Bon encosta num inimigo, encerra com "hit"
+            OnTick = function(p, e, ab)
+                if not IsValid(e) then return end
+
+                local data = ab.data
+                local decoy = data.decoy
+
+                if not IsValid(decoy) then
+                    SherlockHNS.Ability.End(p, "trueform", "manual")
+
+                    return
+                end
+
+                local now = CurTime()
+                local puppet = e:GetPuppet()
+
+                if IsValid(puppet) then
+                    puppet:SetNW2Float("witheredbon_2ddisplay_gentoi", now + 0.25)
+                end
+
+                if p:GetPos():Distance(decoy:GetPos()) > 1100 then
+                    local range = BonCvar("GentoiPills_bon_canuse_trueform_oldbody_detectionrange", 500)
+
+                    for _, v in ipairs(BonFindTargets(p, decoy:GetPos(), range, true)) do
+                        v:SetNW2Float("outline_witheredbon_gentoi_distance", now + 0.25)
+                    end
+                end
+
+                local caught = BonFindTargets(p, e:LocalToWorld(Vector(0, 0, 50)), 120, true)
+                if #caught == 0 then return end
+
+                local outline = BonCvar("GentoiPills_bon_canuse_trueform_outlineduration", 20)
+
+                for _, v in ipairs(caught) do
+                    v:SetNW2Float("outline_witheredbon_gentoi", now + outline)
+                    e.CaughtEnemy_gentoi_bon = v
+
+                    net.Start("OM_gentoi_witheredbon_PlayGlobalSound")
+                    net.Send(v)
+                    net.Start("gentoi_bon_2djumpscare")
+                    net.Send(v)
+                end
+
+                data.hit = true
+                SherlockHNS.Ability.End(p, "trueform", "manual")
+            end,
+
+            OnEnd = function(p, e, ab, reason)
+                local data = ab.data
+                local pos = data.decoyPos
+                local hit = data.hit
+
+                if IsValid(data.decoy) then data.decoy:Remove() end
+                data.decoy = nil
+                data.decoyPos = nil
+                data.hit = nil
+
+                if IsValid(e) then
+                    e.FakePuppet_witheredbon_gentoi = nil
+                    e:SetNWBool("FakePuppet_witheredbon_gentoi", false)
+                    e:SetNW2Float("trueform_duration", 0)
+
+                    local puppet = e:GetPuppet()
+
+                    if IsValid(puppet) then
+                        puppet:SetNW2Float("witheredbon_2ddisplay_gentoi", 0)
+                    end
+
+                    if hit then
+                        e:SetNW2Float("Bon_ability_nosound", CurTime() + BonCvar("GentoiPills_bon_canuse_trueform_nosoundduration", 20))
+                        e:SetNW2Float("jup_delyay_bon", CurTime() + 0.75)
+                    end
+                end
+
+                -- morte, troca de rodada, troca de pill e saida: o gamemode limpa sozinho
+                if reason ~= "expired" and reason ~= "toggle" and reason ~= "manual" then return end
+                if not IsValid(p) or not p:Alive() then return end
+
+                if pos then p:SetPos(pos) end
+
+                -- cooldown diferente para acerto e para falha (apos a API iniciar o dela)
+                local cd = hit and BonCvar("GentoiPills_bon_canuse_trueform_cd_hit", 25)
+                    or BonCvar("GentoiPills_bon_canuse_trueform_cd_failed", 15)
+
+                timer.Simple(0, function()
+                    if IsValid(p) and SherlockHNS then
+                        SherlockHNS.Ability.SetCooldown(p, "trueform", cd)
+                    end
+                end)
+            end,
+        }
+    end
+
+    list[#list + 1] = {
+        id = "voice",
+        name = "Voz",
+        keyLabel = "T",
+        color = Color(200, 200, 200),
+        cooldown = 1,
+        anyRound = true,
+        order = 3,
+
+        OnUse = function(p, e)
+            if not IsValid(e) then return false end
+
+            local snd = tauntSounds[math.random(#tauntSounds)]
+            local duration = SoundDuration(snd)
+            if not duration or duration <= 0 then duration = 2 end
+
+            AdvancedPillSound({ stringe = snd }, e)
+
+            -- o cooldown dura o tamanho do som (como era o VoiceLineDelay)
+            timer.Simple(0, function()
+                if IsValid(p) and SherlockHNS then
+                    SherlockHNS.Ability.SetCooldown(p, "voice", duration)
+                end
+            end)
+        end,
+    }
+
+    return list
 end
 
 hook.Add("SetupMove", "DisablePlayerMovement_bon_withered", function(ply, mv, cmd)
@@ -1284,140 +1566,11 @@ pk_pills.register('PIll_bon_ds_withered', {
         end
     end,
 
-    attack = {
-        mode = 'trigger',
-        func = function(ply, ent)
-            if IsValid(ent.Ragdollentity) then return end
-
-
-            if ent:GetNW2Float("jup_delyay_bon") >= CurTime() then return end
-            if ent:GetNW2Float("trueform_duration") > CurTime() then return end
-            local dur = ent:GetPuppet():SequenceDuration(ent:GetPuppet():LookupSequence("kill"))
-            bonjackietien_jumpscare(
-                ply,
-                ent,
-                dur,
-                function()
-                    ent:PillSound('jumpscares')
-                    ent:PillAnim('jumpscare')
-
-                    local entity = ent.jumpscare_entity
-                    if entity:LookupBone("ValveBiped.Bip01_Pelvis") then
-                        local JumpscareAnimEntity = ents.Create('prop_dynamic')
-                        JumpscareAnimEntity:SetModel('models/Gentoi/walterfiles/bon/killanim.mdl')
-                        JumpscareAnimEntity:SetPos(ent:GetPuppet():GetPos()+ent:GetPuppet():GetForward()*3+ent:GetPuppet():GetUp()*5)
-                        JumpscareAnimEntity:SetAngles(ent:GetPuppet():GetAngles()+Angle(0,180,0))
-                        JumpscareAnimEntity:SetParent(ent:GetPuppet())
-                        JumpscareAnimEntity:Spawn()
-                        ent:DeleteOnRemove(JumpscareAnimEntity)
-
-                        JumpscareAnimEntity:ResetSequence('skeleton')
-
-                        local JumpscareFakeEntity = ents.Create('prop_dynamic')
-                        JumpscareFakeEntity:SetModel(entity:GetModel())
-                        JumpscareFakeEntity:SetParent(JumpscareAnimEntity)
-                        JumpscareFakeEntity:AddEffects(EF_BONEMERGE)
-                        JumpscareFakeEntity:Fire('SetParentAttachment','camera')
-                        JumpscareFakeEntity:Spawn()
-                        ent:DeleteOnRemove(JumpscareFakeEntity)
-                        ent:SetNWEntity("JumpscareDeathThing_ent", JumpscareFakeEntity)
-                        JumpscareFakeEntity:SetNWEntity("JumpscareDeathThing_ent_scp096", entity)
-
-                        local oldcolor = entity:GetColor()
-                        local oldRender = entity:GetRenderMode()
-                        entity:SetRenderMode(RENDERMODE_TRANSCOLOR)
-                        entity:SetColor(Color(255, 255, 255, 0))
-                        entity:SetNoDraw(true)
-						if entity:IsPlayer() then
-							entity:SetActiveWeapon(nil)
-						end
-
-                        ent:CallOnRemove("jumpscareend_afkeacfharcter_"..ent:EntIndex(), function()
-                            if IsValid(entity) then
-                                if IsValid(JumpscareAnimEntity) then
-                                    JumpscareAnimEntity:Remove()
-                                end
-                                if IsValid(JumpscareFakeEntity) then
-                                    JumpscareFakeEntity:Remove()
-                                end
-                                entity:SetNoDraw(false)
-                                entity:SetRenderMode(RENDERMODE_TRANSCOLOR)
-                                entity:SetColor(Color(255, 255, 255, 255))
-                                entity:SetRenderMode(oldRender)
-                                entity:SetColor(oldcolor)
-                            end
-                        end)
-
-                        timer.Simple(dur,function()
-                            if !IsValid(ent) then return end
-                            ent:RemoveCallOnRemove("jumpscareend_afkeacfharcter_"..ent:EntIndex())
-
-                            JumpscareAnimEntity:SetParent(NULL)
-                            ent:SetNWEntity("JumpscareDeathThing_ent", NULL)
-
-                            if IsValid(JumpscareAnimEntity) and IsValid(JumpscareFakeEntity) then
-
-                                local rag = ents.Create("prop_ragdoll")
-                                rag:SetModel(JumpscareFakeEntity:GetModel())
-                                rag:SetPos(JumpscareAnimEntity:GetPos() + ent:GetPuppet():GetForward()*30 )
-                                local anglething = JumpscareFakeEntity:GetAngles()
-                                anglething:RotateAroundAxis(JumpscareAnimEntity:GetForward(), 90)
-                                anglething:RotateAroundAxis(JumpscareAnimEntity:GetUp(), 90)
-                                rag:SetAngles(anglething+Angle(0,180,0))
-                                rag:Spawn()
-
-                                JumpscareAnimEntity:Remove()
-                                JumpscareFakeEntity:Remove()
-                            end
-                            if IsValid(entity) then
-                                entity:SetRenderMode(RENDERMODE_TRANSCOLOR)
-                                entity:SetColor(Color(255, 255, 255, 255))
-                            end
-                        end)
-                    end
-
-                end
-            )
-        end
-    },
-
-    attack2 = {
-        mode = 'tick',
-        func = function(ply, ent)
-        end
-    },
-
-    noragdoll=true,
-
-    use_bonz=function(ply,ent)
-        --[[
-        if not ent.jumpscareduratino then ent.jumpscareduratino = -1 end
-        if not ent.clickingminigame then ent.clickingminigame = -1 end
-
-        if ent.clickingminigame-CurTime() < 0 then return end
-
-        local current_Bon_bonClicking_ds = ent:GetNWInt("Bon_bonClicking_ds", 0)
-        ent:SetNWInt("Bon_bonClicking_ds", current_Bon_bonClicking_ds + 1)]]
-
-    end,
-
-    reload=function(ply,ent)
-        --[[
-        if not ent.stealthCooldown then ent.stealthCooldown = 0 end
-
-        if ent.stealthDuration >= CurTime() then
-            ply:ChatPrint("You must wait ".. math.Round(ent.stealthCooldown - CurTime(), 1) .. " second before you can use stealthiness again. Ability lasts " .. math.Round(ent.stealthDuration - CurTime(), 1) .. " seconds. ")
-            return
-        end
-
-        if ent.stealthCooldown >= CurTime() then
-            ply:ChatPrint("You must wait ".. math.Round(ent.stealthCooldown - CurTime(), 1) .. " second before you can use stealthiness again.")
-            return
-        end
-
-        ent.stealthDuration = CurTime() + 60
-        ent.stealthCooldown = ent.stealthDuration + 30]]
-    end,
+    -- Sherlock HnS: ataque (M1), Forma Verdadeira (1) e voz (T) estao na Abilities API
+    -- (BonBuildAbilities). O kill passa pela Kill API (playHNSJumpscare -> KillWithDelay).
+    -- A pill nao fere players por conta propria, entao a auditoria e declarada explicitamente.
+    hnsKillAPI = true,
+    hnsAbilities = BonBuildAbilities,
 
     flashlight = function(ply, ent)
 
@@ -1447,45 +1600,9 @@ pk_pills.register('PIll_bon_ds_withered', {
             ent:SetNW2Bool('HoldingDownMenu_space_bon', true)
         end
         if button == KEY_1 then
-            if ply:GetNWInt("DisableMovement_jumpscare_pill_bon_withered") >= CurTime() then return end
-            if IsValid(ent.Ragdollentity) then return end
-            if SERVER then
-                if ent.FakePuppet_witheredbon_gentoi and IsValid(ent.FakePuppet_witheredbon_gentoi) then
-                    ply:SetPos(ent.FakePuppet_witheredbon_gentoi:GetPos())
-                    ent.FakePuppet_witheredbon_gentoi:Remove()
-                    ent:GetPuppet():SetNW2Float("witheredbon_2ddisplay_gentoi", 0)
-                    ent:SetNWBool("FakePuppet_witheredbon_gentoi", false)
-                    ent:SetNW2Float("trueform_duration", 0)
-
-                    local CD = GetConVar("GentoiPills_bon_canuse_trueform_cd_failed"):GetFloat()
-                    ent:SetNW2Float("Bon_abilitycd", CurTime()+ CD)
-                    ent:SetNW2Float("Bon_abilitycd_dur", CD)
-                else
-                    if GetConVar("GentoiPills_bon_canuse_trueform"):GetBool() then else return end
-                    if ent:GetNW2Float("Bon_abilitycd") >= CurTime() then return end
-                    local puppet = ents.Create("prop_dynamic")
-                    puppet:SetModel("models/gentoi/walterfiles/witheredbon.mdl")
-                    puppet:Spawn()
-
-                    puppet:SetPos(ent:GetPuppet():GetPos())
-                    puppet:SetAngles(ent:GetPuppet():GetAngles())
-
-                    ent:DeleteOnRemove(puppet)
-
-                    local seq = puppet:LookupSequence("idle")
-                    puppet:ResetSequence(seq)
-                    puppet:SetCycle(0)
-                    puppet:SetPlaybackRate(1)
-
-                    ent.FakePuppet_witheredbon_gentoi = puppet
-                    ent:SetNWBool("FakePuppet_witheredbon_gentoi", true)
-
-                    local CD = GetConVar("GentoiPills_bon_canuse_trueform_duration"):GetFloat()
-
-                    ent:SetNW2Float("trueform_duration", CurTime()+CD)
-                    ent:SetNW2Float("Bon_abilitycd", CurTime()+ CD)
-                    ent:SetNW2Float("Bon_abilitycd_dur", CD)
-                end
+            -- Forma Verdadeira: regras de uso, duracao e cooldown ficam na Ability API
+            if SERVER and SherlockHNS then
+                SherlockHNS.Ability.Use(ply, "trueform")
             end
         end
         if button == KEY_R then
@@ -1496,45 +1613,21 @@ pk_pills.register('PIll_bon_ds_withered', {
             end
         end
         if button == KEY_T then
-            if not ent.VoiceLineDelay then ent.VoiceLineDelay = 0 end
-
-            if ent.VoiceLineDelay >= CurTime() then
-                return
-            end
-
-            local soundgo = {
-                [0] = "dark/bon/BONsound1.mp3",
-                [1] = "dark/bon/BONsound2.mp3",
-                [2] = "gentoi/witheredbon/BonLaughNew.wav"
-            }
-
-            local key = math.random(0,2)
-
-            if soundgo[key] ~= nil then
-                local duration = SoundDuration(soundgo[key])
-
-                ent.VoiceLineDelay = CurTime() + duration
-
-                AdvancedPillSound(
-                    {
-                        stringe = soundgo[key],
-                    },
-                    ent
-                )
+            if SERVER and SherlockHNS then
+                SherlockHNS.Ability.Use(ply, "voice")
             end
         end
     end,
-        
+
     jump = function(ply, ent) end,
 
-    bon_gentoi_stats = {
-        moveSpeed = {
-            walk = 64,
-            run = 420,
-            ducked= 64,
-            jumppower= 0,
-        },
+    -- Velocidade definida somente pelo Parakeet's (pk_pills.getMoveSpeed / ApplyMoveSpeed)
+    moveSpeed = {
+        walk = 64,
+        run = 420,
+        ducked = 64,
     },
+    jumpPower = 0,
 
     think_n_bon_withered = function(ply, ent)
         if SERVER then
@@ -1547,99 +1640,13 @@ pk_pills.register('PIll_bon_ds_withered', {
                 end
             end
             
-            ent:SetNW2Bool("GentoiPills_bon_canuse_trueform",GetConVar("GentoiPills_bon_canuse_trueform"):GetBool())
-
-            local speed = {
-                ['walk'] = GetConVar("GentoiPills_bon_walkspeed"):GetFloat(),
-                ['run'] = GetConVar("GentoiPills_bon_runspeed"):GetFloat(),
-                ['ducked'] = GetConVar("GentoiPills_bon_crouchspeed"):GetFloat(),
-                ['jumppower'] =GetConVar("GentoiPills_bon_jumppower"):GetFloat(),
-            }
             local puppet = ent:GetPuppet()
             puppet:SetRenderMode(RENDERMODE_TRANSALPHA)
-            if ent.FakePuppet_witheredbon_gentoi and IsValid(ent.FakePuppet_witheredbon_gentoi) then
 
-                speed["walk"] = speed["walk"] + GetConVar("GentoiPills_bon_trueform_walkadd"):GetFloat()
-                speed["run"] = speed["run"] + GetConVar("GentoiPills_bon_trueform_runadd"):GetFloat()
-                speed["ducked"] = speed["ducked"] + GetConVar("GentoiPills_bon_trueform_crouchadd"):GetFloat()
-
-                if ent:GetNW2Float("trueform_duration") < CurTime() then
-                    ent.FakePuppet_witheredbon_gentoi:Remove()
-                    timer.Simple(0,function()
-                        if !IsValid(ent) then return end
-                        ply:SetPos(ent.FakePuppet_witheredbon_gentoi:GetPos())
-                        ent:GetPuppet():SetNW2Float("witheredbon_2ddisplay_gentoi", 0)
-                        ent:SetNWBool("FakePuppet_witheredbon_gentoi", false)
-                        ent:SetNW2Float("trueform_duration", 0)
-
-                        local CD = GetConVar("GentoiPills_bon_canuse_trueform_cd_failed"):GetFloat()
-                        ent:SetNW2Float("Bon_abilitycd", CurTime()+ CD)
-                        ent:SetNW2Float("Bon_abilitycd_dur", CD)
-                    end)
-                end
-
-                ent:GetPuppet():SetNW2Float("witheredbon_2ddisplay_gentoi", CurTime()+0.1)
+            -- A habilidade "trueform" (Abilities API) cuida de duracao, deteccao e cooldown.
+            -- Aqui so mantemos o corpo real invisivel enquanto o corpo antigo existe.
+            if IsValid(ent.FakePuppet_witheredbon_gentoi) then
                 puppet:SetColor(Color(255,255,255,0))
-
-                if ply:GetPos():Distance(ent.FakePuppet_witheredbon_gentoi:GetPos()) > 1100 then
-
-                    local attackPos = ent.FakePuppet_witheredbon_gentoi:GetPos()
-
-                    for _, ent2 in pairs(ents.FindInSphere(attackPos, GetConVar("GentoiPills_bon_canuse_trueform_oldbody_detectionrange"):GetFloat())) do
-                        if (ent2:IsPlayer() or ent2:IsNextBot() or ent2:IsNPC()) and ent2:Health() >= 0.01 then
-                            if ent2 == ply then continue end
-                            if ent2:IsPlayer() and ent2:Team() == TEAM_SPECTATOR then continue end
-                            if bit.band(ent2:GetFlags(), FL_NOTARGET) ~= 0 then continue end
-
-                            if ent2:IsPlayer() or ent2:IsNPC() or ent2:IsNextBot() then
-
-                                ent2:SetNW2Float("outline_witheredbon_gentoi_distance", CurTime() + 0.1)
-
-                            end
-                        end
-                    end
-                end
-
-                local attackPos = ent:LocalToWorld(Vector(0, 0, 50))
-
-                for _, ent2 in pairs(ents.FindInSphere(attackPos, 120)) do
-                    if (ent2:IsPlayer() or ent2:IsNextBot() or ent2:IsNPC()) and ent2:Health() >= 0.01 then
-                        if ent2 == ply then continue end
-                        if ent2:IsPlayer() and ent2:Team() == TEAM_SPECTATOR then continue end
-                        if bit.band(ent2:GetFlags(), FL_NOTARGET) ~= 0 then continue end
-
-                        if ent2:IsPlayer() or ent2:IsNPC() or ent2:IsNextBot() then
-
-                            ent2:SetNW2Float("outline_witheredbon_gentoi", CurTime() + GetConVar("GentoiPills_bon_canuse_trueform_outlineduration"):GetFloat())
-                            ent2:SetNW2Float("jup_delyay_bon", CurTime() + 0.75)
-
-                            ent.FakePuppet_witheredbon_gentoi:Remove()
-                            timer.Simple(0,function()
-                                if !IsValid(ent) then return end
-                                ply:SetPos(ent.FakePuppet_witheredbon_gentoi:GetPos())
-                                ent:GetPuppet():SetNW2Float("witheredbon_2ddisplay_gentoi", 0)
-                                ent:SetNWBool("FakePuppet_witheredbon_gentoi", false)
-                                ent:SetNW2Float("trueform_duration", 0)
-
-                                local CD = GetConVar("GentoiPills_bon_canuse_trueform_cd_hit"):GetFloat()
-                                ent:SetNW2Float("Bon_abilitycd", CurTime()+ CD)
-                                ent:SetNW2Float("Bon_abilitycd_dur", CD)
-
-                                ent:SetNW2Float("Bon_ability_nosound", CurTime()+ GetConVar("GentoiPills_bon_canuse_trueform_nosoundduration"):GetFloat())
-                            end)
-                            if ent2:IsPlayer() then
-                                ent.CaughtEnemy_gentoi_bon = ent2
-
-                                net.Start('OM_gentoi_witheredbon_PlayGlobalSound')
-                                net.Send(ent2)
-                                net.Start("gentoi_bon_2djumpscare")
-                                net.Send(ent2)
-                            end
-
-                        end
-                    end
-                end
-
                 puppet:DrawShadow(false)
             else
                 puppet:DrawShadow(true)
@@ -1660,16 +1667,6 @@ pk_pills.register('PIll_bon_ds_withered', {
                 end
             end
 
-            --ent:SetNW2Float("WalkAnimrate_witheredbon", speed["walk"]/64)
-            --ent:SetNW2Float("RunAnimrate_witheredbon", speed["run"]/420)
-            --ent:SetNW2Float("CrouchAnimrate_witheredbon", speed["ducked"]/64)
-
-            if IsValid(ply) and IsValid(ent) then
-                ply:SetWalkSpeed(speed["walk"])
-                ply:SetRunSpeed(speed["run"])
-                ply:SetCrouchedWalkSpeed(speed["ducked"])
-                ply:SetJumpPower(speed["jumppower"])
-            end
 
             local puppet = ent:GetPuppet()
             if ent.jumpscarenetity then
@@ -1713,6 +1710,7 @@ pk_pills.register('PIll_bon_ds_withered', {
 
             if ent.FakePuppet_witheredbon_gentoi and IsValid(ent.FakePuppet_witheredbon_gentoi) then shouldnt = false end
             if ply:GetNWInt("DisableMovement_jumpscare_pill_bon_withered") >= CurTime() then shouldnt = false end
+            if SherlockHNS and (ply.SherlockLocked or ply.SherlockKillLocked) then shouldnt = false end
 
             if ent:GetNW2Bool("HoldingDownMenu_space_bon") and shouldnt then
                 if not IsValid(ent.Ragdollentity) then
