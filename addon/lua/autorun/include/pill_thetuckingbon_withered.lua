@@ -1010,15 +1010,16 @@ local function BonStartJumpscare(ply, ent)
     local puppet = ent:GetPuppet()
     if not IsValid(puppet) then return false end
 
-    local victim, nearest
-
-    for _, v in ipairs(BonFindTargets(ply, ent:LocalToWorld(Vector(0, 0, 50)), 70, false)) do
-        local d = v:GetPos():DistToSqr(ply:GetPos())
-
-        if not nearest or d < nearest then
-            victim, nearest = v, d
-        end
-    end
+    local victim = SherlockHNS.FindVictim(
+        ply,
+        ent:LocalToWorld(Vector(0, 0, 50)),
+        70,
+        {
+            filter = function(v)
+                return bit.band(v:GetFlags(), FL_NOTARGET) == 0
+            end,
+        }
+    )
 
     if not victim then return false end
 
